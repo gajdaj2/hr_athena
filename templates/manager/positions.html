@@ -1,0 +1,25 @@
+{% extends 'manager/base.html' %}
+
+
+
+{% block content %}
+
+    {% load django_tables2 %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {% render_table positions %}
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            <div class="form-group">
+                {{ form.as_table }}
+            </div>
+            <br/>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Add new Position</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

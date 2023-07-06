@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>HR Athena</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+<div class="container">
+    <h1 class="h1"> Welcome in New Test for Automation</h1>
+    <a href="{% url 'manager:home' %}">Interview manager</a>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                    type="button" role="tab" aria-controls="nav-home" aria-selected="true">Test Automation
+            </button>
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                    type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Java
+            </button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
+                    type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Robot-Framework
+            </button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <form>
+                <div class="p-3 mb-2 bg-success text-white">
+                    <div class="form-group row">
+                        {% for question in questions %}
+                            {% if question.language == "All" %}
+                                <h2> {{ question.question }}</h2>
+                                {% for answer in answers %}
+                                    {% if question == answer.question %}
+
+                                        <input type="checkbox" name="{{ answer.is_true }}"> {{ answer.answer }}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="p-3 mb-2 bg-light text-dark">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <form>
+                <div class="p-3 mb-2 bg-success text-white">
+                    <div class="form-group row">
+                        {% for question in questions %}
+                            {% if question.language == "Java" %}
+                                <h2> {{ question.question }}</h2>
+                                {% for answer in answers %}
+                                    {% if question == answer.question %}
+
+                                        <input type="checkbox" name="{{ answer.is_true }}"> {{ answer.answer }}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="p-3 mb-2 bg-light text-dark">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+            Questions for Robot Framework
+        </div>
+    </div>
+    <div class="container">
+        <div class="form-inline">
+            <button name="sore" onclick="count()" class="btn btn-primary"> Scoring</button>
+            Your score: <input type="text" name="score" id="score">
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function count() {
+        score = 0
+        var list = document.querySelectorAll('input[type="checkbox"][name="True"]:checked')
+        document.getElementById("score").value = list.length
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'manager/base.html' %}
+
+
+{% block content %}
+
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    {{ question.question }}
+
+    {% load django_tables2 %}
+
+    {% render_table skills %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <div class="form-group">
+            </div>
+            <button class="btn btn-primary" type="submit">Add new Skill</button>
+        </form>
+    </div>
+{% endblock %}

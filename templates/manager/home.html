@@ -1,0 +1,11 @@
+{% extends 'manager/base.html' %}
+
+
+{% block content %}
+    {% load django_tables2 %}
+    <form method="post">
+    {% csrf_token %}
+    {% render_table table %}
+    </form>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'manager/base.html' %}
+
+
+{% block content %}
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+             {% bootstrap_field form_question.question layout='horizontal' size='sm' %}
+            {% bootstrap_field form_question.language layout='horizontal' size='sm' %}
+            {% bootstrap_field form_question.type layout='horizontal' size='sm' %}
+            <button class="btn btn-primary" type="submit">Save</button>
+
+        </form>
+    </div>
+{% endblock %}
