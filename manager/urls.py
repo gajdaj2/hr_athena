@@ -31,5 +31,7 @@ urlpatterns = [
     path('/cv', views.cvanalysis, name='cvanalysis'),
     path('/genprofile', views.gen_profile, name='genprofile'),
     path('/positions', views.positions, name='positions'),
-    path('/positions/detail/<int:pk>', views.pos_details, name='pos_details')
+    path('/positions/detail/<int:pk>', views.pos_details, name='pos_details'),
+    path('/generator/questions/', views.gen_questions, name='gen_questions'),
+    path('/generator/linkedin/', views.linkedin, name='linkedin'),
 ]

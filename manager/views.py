@@ -4,10 +4,33 @@ from django.contrib.auth import login, logout, authenticate
 
 # Create your views here.
 from hr_athena.models import Question, Answer
+from manager.analysis.interview.question_generator import question_generator
+from manager.analysis.third_part.linkedin_analysis import linkedin_analysis
 from manager.forms import QuestionForm, QuestionTable, AnswerTable, CVForm, JobPositionTable, SkillsTable, \
     JobPositionForm, SkillsForm
 from manager.models import JobPosition, Skills
 from manager.analysis.text_summerization import cv_summarize, cv_question
+
+
+def linkedin(request):
+    if request.method == "GET":
+        return render(request, 'manager/linkedin.html')
+    else:
+        linkedin_url = request.POST['linkedin_url']
+        review = linkedin_analysis(linkedin_url)
+        return render(request, 'manager/linkedin.html', {"review": review})
+
+
+def gen_questions(request):
+    positions = JobPosition.objects.all()
+    if request.method == "GET":
+        return render(request, 'manager/gen_questions.html')
+    else:
+        level = request.POST['level']
+        number_of_questions = request.POST['question_number']
+        question = request.POST['question']
+        answers = question_generator(q_number=number_of_questions, question=question, level=level)
+        return render(request, 'manager/gen_questions.html', {"answers": answers})
 
 
 def pos_details(request, pk):
