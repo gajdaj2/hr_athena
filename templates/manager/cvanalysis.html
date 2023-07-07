@@ -51,11 +51,15 @@
             </table>
             <br/>
             <p class="fw-bolder"> CV Summary: </p>
-            {{ cv_summarize }}
+            {{ cv_summarize|linebreaks }}
+            <br/>
             <p class="fw-bolder"> Answer from Athena: </p>
-            {{ answer }}
+            {{ answer|linebreaks }}
             <br/>
             <br/>
+
+            <p class="fw-bolder"> Interview questions </p>
+            {{ interview_questions|linebreaks }}
         {% endif %}
     </div>
     {% include 'partials/loader.html' %}

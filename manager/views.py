@@ -1,4 +1,3 @@
-import PyPDF2
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 
@@ -6,10 +5,11 @@ from django.contrib.auth import login, logout, authenticate
 from hr_athena.models import Question, Answer
 from manager.analysis.interview.question_generator import question_generator
 from manager.analysis.third_part.linkedin_analysis import linkedin_analysis
+from manager.analysis.third_part.pdf_analysis import get_text_from_pdf, pdf_cv_analysis, short_summary_template, \
+    free_question_template, interview_questions_template
 from manager.forms import QuestionForm, QuestionTable, AnswerTable, CVForm, JobPositionTable, SkillsTable, \
     JobPositionForm, SkillsForm
 from manager.models import JobPosition, Skills
-from manager.analysis.text_summerization import cv_summarize, cv_question
 
 
 def linkedin(request):
@@ -164,26 +164,20 @@ def cvanalysis(request):
     else:
         jobPositions = JobPosition.objects.all()
         max_score = Skills.objects.filter(job_position=int(request.POST['options'])).count()
-        file = ""
-        pdfReader = PyPDF2.PdfReader(request.FILES['filepath'])
-        for x in range(len(pdfReader.pages)):
-            filePage = pdfReader.pages[x]
-            file += filePage.extract_text(0)
-        # candidate_skill = file.split(" ",",")
-        # lower_candidate_skill = [skill.lower() for skill in candidate_skill]
+        file_s = request.FILES['filepath']
+        file = get_text_from_pdf(file_s)
         skills_to_check = Skills.objects.filter(job_position=int(request.POST['options']))
         candiate_skill_checked = []
-
         for skill in skills_to_check:
             if skill.skill.lower() in file.lower():
                 candiate_skill_checked.append(skill)
-
-        cv_sum = cv_summarize(file)
-        question = request.POST['question']
-        answer = cv_question(question=question, text=file)
+        cv_sum = pdf_cv_analysis(file, short_summary_template)
+        question_from_recruitment = request.POST['question']
+        answer = pdf_cv_analysis(file, free_question_template, question_from_recruitment)
+        interview_questions = pdf_cv_analysis(file, interview_questions_template)
 
         return render(request, 'manager/cvanalysis.html',
                       {"cvform": cvform, "file": file, "max_score": max_score,
                        "canidate_score": len(candiate_skill_checked),
                        "postions": jobPositions, 'skills': candiate_skill_checked,
-                       "cv_summarize": cv_sum, "answer": answer})
+                       "cv_summarize": cv_sum, "answer": answer, "interview_questions": interview_questions})
