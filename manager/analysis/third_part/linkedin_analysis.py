@@ -12,8 +12,7 @@ def summary_template():
     given the linkedin information {information} about person  from I want you to create:
         1. a short summary of the person
         2. 5 Technology what he know
-        3. Two interesting facts about the person
-        3. Two interview questions you can ask him
+        3. Three interview questions and answers you can ask him base on his technical skills
     """
 
 def linkedin_analysis(link):

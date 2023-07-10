@@ -41,7 +41,7 @@ def interesting_facts_template():
 def interview_questions_template():
     return """
     given the linkedin information {information} about person  from I want you to create:
-        1. Four interview questions base on his experience
+        1. Four interview questions with answers base on his experience
     """
 
 
