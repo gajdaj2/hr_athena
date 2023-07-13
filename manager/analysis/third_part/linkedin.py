@@ -1,5 +1,5 @@
 import requests
-
+import os
 
 def scrape_linkedin_profile(url):
     api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
