@@ -16,6 +16,11 @@ class QuestionForm(forms.Form):
     type = forms.ChoiceField(choices=TYPE)
 
 
+class TranscriptForm(forms.Form):
+    question = forms.CharField(max_length=255)
+    filepath = forms.FileField()
+
+
 class CVForm(forms.Form):
     job_position_form = forms.ChoiceField(choices=JOB_POSITION)
     filepath = forms.FileField()

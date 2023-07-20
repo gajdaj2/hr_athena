@@ -6,9 +6,9 @@ from hr_athena.models import Question, Answer
 from manager.analysis.interview.question_generator import question_generator
 from manager.analysis.third_part.linkedin_analysis import linkedin_analysis
 from manager.analysis.third_part.pdf_analysis import get_text_from_pdf, pdf_cv_analysis, short_summary_template, \
-    free_question_template, interview_questions_template
+    free_question_template, interview_questions_template, get_text_from_wav
 from manager.forms import QuestionForm, QuestionTable, AnswerTable, CVForm, JobPositionTable, SkillsTable, \
-    JobPositionForm, SkillsForm
+    JobPositionForm, SkillsForm, TranscriptForm
 from manager.models import JobPosition, Skills
 
 
@@ -181,3 +181,34 @@ def cvanalysis(request):
                        "canidate_score": len(candiate_skill_checked),
                        "postions": jobPositions, 'skills': candiate_skill_checked,
                        "cv_summarize": cv_sum, "answer": answer, "interview_questions": interview_questions})
+
+
+def transcript(request):
+    transcriptForm = TranscriptForm(request.POST, request.FILES)
+
+    if request.method == 'GET':
+        jobPositions = JobPosition.objects.all()
+        return render(request, 'manager/transcript.html', {"transcriptForm": transcriptForm, "postions": jobPositions})
+    else:
+        jobPositions = JobPosition.objects.all()
+        max_score = Skills.objects.filter(job_position=int(request.POST['options'])).count()
+        file_s = request.FILES['filepath']
+        file = get_text_from_wav(file_s)
+        skills_to_check = Skills.objects.filter(job_position=int(request.POST['options']))
+        candiate_skill_checked = []
+        for skill in skills_to_check:
+            if skill.skill.lower() in file.lower():
+                candiate_skill_checked.append(skill)
+        cv_sum = pdf_cv_analysis(file, short_summary_template)
+        question_from_recruitment = request.POST['question']
+        answer = pdf_cv_analysis(file, free_question_template, question_from_recruitment)
+        interview_questions = pdf_cv_analysis(file, interview_questions_template)
+        return render(request, 'manager/transcript.html', {"transcriptForm": transcriptForm,
+                                                           "file": file,
+                                                           "max_score": max_score,
+                                                           'skills': candiate_skill_checked,
+                                                           "canidate_score": len(candiate_skill_checked),
+                                                           "answer": answer,
+                                                           "interview_questions": interview_questions,
+                                                           "postions": jobPositions,
+                                                           "cv_summarize": cv_sum})
