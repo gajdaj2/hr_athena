@@ -1,0 +1,74 @@
+{% extends 'manager/base.html' %}
+
+
+{% block content %}
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    <div class="container">
+        <form method="post" class="show-loader" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <br/>
+                <select class="form-select" name="options" id="options">
+                    {% for postion in postions %}
+                        <option value="{{ postion.pk }}">{{ postion }}</option>
+                    {% endfor %}
+                </select>
+                <br/>
+                {% bootstrap_field transcriptForm.filepath layout='horizontal' size='sm' %}
+
+                Question to Athena:
+                <textarea name="question" class="form-control" rows="3">
+
+            </textarea>
+                <br/>
+                <button class="btn btn-primary" onsubmit="move()" type="submit">Make analysis</button>
+            </div>
+        </form>
+        {% if file is not None %}
+            <p class="fw-bolder"> Max score: {{ max_score }} </p>
+            <br/>
+            <p class="fw-bolder"> Candidate score: {{ canidate_score }} </p>
+            <br>
+            Transcript:
+            {{ file|linebreaks }}
+            <br/>
+            <br>
+            English transcript:
+            {{ file_to_english|linebreaks }}
+            <br/>
+            Details:
+            <table class="table">
+                <thead>
+                <th scope="col">Skill Type</th>
+                <th scope="col">Skill</th>
+                </thead>
+                {% for skill in skills %}
+                    <tr>
+                        <td>{{ skill.skill_type }}</td>
+                        <td>{{ skill.skill }} </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br/>
+            <p class="fw-bolder"> CV Summary: </p>
+            {{ cv_summarize|linebreaks }}
+            <br/>
+            <p class="fw-bolder"> Answer from Athena: </p>
+            {{ answer|linebreaks }}
+            <br/>
+            <br/>
+
+            <p class="fw-bolder"> Interview questions </p>
+            {{ interview_questions|linebreaks }}
+
+        {% endif %}
+    </div>
+    {% include 'partials/loader.html' %}
+{% endblock %}

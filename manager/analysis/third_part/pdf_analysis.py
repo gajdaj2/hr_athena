@@ -1,4 +1,5 @@
 import PyPDF2
+import openai
 from langchain import PromptTemplate, LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader
@@ -6,6 +7,7 @@ from langchain.document_loaders import PyPDFLoader
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 def summary_template():
     return """
@@ -52,6 +54,12 @@ def free_question_template(question):
     """"""
 
 
+def get_text_from_wav(path) -> str:
+    audio_file = path
+    transcript = openai.Audio.transcribe("whisper-1", audio_file)
+    return transcript['text']
+
+
 def get_text_from_pdf(path: str) -> str:
     text = ""
     reader = PyPDF2.PdfReader(path)
@@ -71,6 +79,3 @@ def pdf_cv_analysis(file_text: str, template, question=None) -> str:
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
     profile = chain.run(information=text)
     return profile
-
-
-
