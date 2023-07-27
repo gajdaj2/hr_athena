@@ -3,10 +3,11 @@ from django.contrib.auth import login, logout, authenticate
 
 # Create your views here.
 from hr_athena.models import Question, Answer
-from manager.analysis.interview.question_generator import question_generator
+from manager.analysis.interview.question_generator import question_generator, technical_question
 from manager.analysis.third_part.linkedin_analysis import linkedin_analysis
 from manager.analysis.third_part.pdf_analysis import get_text_from_pdf, pdf_cv_analysis, short_summary_template, \
     free_question_template, interview_questions_template, get_text_from_wav
+from manager.analysis.third_part.translator import translate
 from manager.forms import QuestionForm, QuestionTable, AnswerTable, CVForm, JobPositionTable, SkillsTable, \
     JobPositionForm, SkillsForm, TranscriptForm
 from manager.models import JobPosition, Skills
@@ -202,9 +203,11 @@ def transcript(request):
         cv_sum = pdf_cv_analysis(file, short_summary_template)
         question_from_recruitment = request.POST['question']
         answer = pdf_cv_analysis(file, free_question_template, question_from_recruitment)
+        file_to_english = translate(file)
         interview_questions = pdf_cv_analysis(file, interview_questions_template)
         return render(request, 'manager/transcript.html', {"transcriptForm": transcriptForm,
                                                            "file": file,
+                                                           "file_to_english": file_to_english,
                                                            "max_score": max_score,
                                                            'skills': candiate_skill_checked,
                                                            "canidate_score": len(candiate_skill_checked),
@@ -212,3 +215,13 @@ def transcript(request):
                                                            "interview_questions": interview_questions,
                                                            "postions": jobPositions,
                                                            "cv_summarize": cv_sum})
+
+
+def technical(request):
+    if request.method == "GET":
+        return render(request, 'manager/technical.html')
+    else:
+        level = request.POST['level']
+        position = request.POST['question']
+        answers = technical_question(position=position, level=level)
+        return render(request, 'manager/technical.html', {"answers": answers})

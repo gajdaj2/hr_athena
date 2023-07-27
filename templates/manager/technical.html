@@ -1,0 +1,41 @@
+{% extends 'manager/base.html' %}
+
+    {% load django_bootstrap5 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+
+{% block content %}
+
+
+
+    <br/>
+    <div class="container">
+    <form method="post" class="show-loader" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                <label for="question">Development language</label>
+                <input type="text" name="question" id="question" class="form-control" placeholder="Java, Python, C#, Javascript ...">
+                </div>
+            </div>
+            <br/>
+        <br/>
+         <div class="row">
+                <div class="col-md-12">
+                  <label for="question_number">Knowledge Level</label>
+                  <input type="text" name="level" class="form-control" placeholder="Junior, Senior, Expert ...">
+                </div>
+             </div>
+                 <br/>
+        <button class="btn btn-primary" onsubmit="move()" type="submit">Generate</button>
+
+        {{ answers|linebreaks }}
+    </form>
+    {% include 'partials/loader.html' %}
+    </div>
+{% endblock %}

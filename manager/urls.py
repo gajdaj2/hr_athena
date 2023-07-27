@@ -35,4 +35,5 @@ urlpatterns = [
     path('/generator/questions/', views.gen_questions, name='gen_questions'),
     path('/generator/linkedin/', views.linkedin, name='linkedin'),
     path('/transcript', views.transcript, name='transcript'),
+    path('/generator/questions/technical', views.technical, name='technical'),
 ]
